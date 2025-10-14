@@ -1,0 +1,23 @@
+name: 04 first_workflow_dispatch
+
+on:
+  workflow_dispatch: #This is a manual triggered workflow_dispatch
+    inputs:
+        username:
+            description: 'Username'
+            default: 'Simikahle'
+            required: true
+            type: string
+        age:
+            description: 'Age'
+            required: true
+            type: number
+ 
+jobs:
+  echo-username-age:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Echo username and age 
+        run: |
+            echo "Username: ${{inputs.username}}"
+            echo "Age: ${{inputs.age}}"
