@@ -1,37 +1,35 @@
-name: 02 Conditiona Steps
+name: 02 Conditional Steps
 
 on:
- workflow_dispatch: #This is a manual triggered workflow_dispatch
+  workflow_dispatch: #This is a manual triggered workflow_dispatch
  
 jobs:
- example_job:
-  runs-on: ubuntu-latest 
+  example_job:
+    runs-on: ubuntu-latest 
   
-  steps:
-   - name: Step 1 - exit code 
-    id: successful_step
-    run: |
-     echo "exit code 0"
-     exit 0 #successful (exit code 0)
-     shell: bash
+    steps:
+      - name: Step 1 - exit code 
+        id: successful_step
+        run: |
+          echo "exit code 0"
+          exit 0 #successful (exit code 0)
+        shell: bash
      
-   - name: Step 2 - executed if the previouse succeesed
-     if: ${{ success()}}
-     run: |
-      echo "running because the previouse succeeded"
+      - name: Step 2 - executed if the previous succeeded
+        if: ${{ success() }}
+        run: |
+          echo "running because the previous succeeded"
       
+      - name: Step 3 - I am failing 
+        run: |
+          echo "I am failing"
+          exit 1 # Failure (non-zero exit code)
       
+      - name: Step 4 - I will never execute  
+        run: |
+          echo "I will never execute"
       
-   - name: Step 3 - I am failing 
-     run: |
-      echo "I am failing"
-      exit 1 # Failure (non- zero exit code)
-      
-    - name: Step 4 - I will never execute  
-     run: |
-      echo "I will never execute"
-      
-    - name: Step 5 - Execute on workflow Failure 
-     if: ${{failure()}}
-     run: |
-      echo "workflow failed"
+      - name: Step 5 - Execute on workflow Failure 
+        if: ${{ failure() }}
+        run: |
+          echo "workflow failed"
