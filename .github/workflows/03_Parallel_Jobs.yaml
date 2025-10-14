@@ -1,0 +1,26 @@
+name: 03 Parallel Jobs
+
+on:
+  workflow_dispatch: #This is a manual triggered workflow_dispatch
+ 
+jobs:
+  linting:
+    runs-on: ubuntu-latest 
+    steps:
+      - name: Linting 
+        run: echo "Running Linting"
+     
+  unit_test: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unit Testing
+        run: echo "running because the previous succeeded"
+      
+  integration_tests: 
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup test environment
+        run: echo "setting up test environment"
+
+      - name: Integration Test
+        run: echo "Running Integration testing"
