@@ -1,0 +1,53 @@
+name: 07 Passing Files In Artifacts
+
+on:
+  workflow_dispatch:
+    
+jobs:
+  unit-tests:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout source code 
+        uses: actions/checkout@v4
+
+      - name: Install Python 3.10
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install tox and coverage
+        run: pip install tox coverage
+
+      - name: Run unit tests
+        run: |
+          cd backend
+          tox -e unit
+          echo "Current directory: $(pwd)"
+          echo "Files in backend after tox:"
+          ls -la
+          echo "Looking for coverage files:"
+          find . -name ".coverage*" -o -name "*.coverage*" 2>/dev/null || echo "No coverage files found"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: ${{ github.workspace }}/backend/.coverage
+          if-no-files-found: warn
+  
+  load-file-example:
+    runs-on: ubuntu-22.04
+    needs: [unit-tests]
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: ${{ github.workspace }}
+
+      - name: List folder contents
+        run: |
+          echo "Contents of workspace:"
+          ls -la ${{ github.workspace }}
+          echo "Looking for downloaded coverage file:"
+          find ${{ github.workspace }} -name ".coverage*" 2>/dev/null || echo "No coverage file found"
